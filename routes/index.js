@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
   ])
   .spread(function(hotels, restaurants, activities) {
     res.render('index', {
-      all_hotels: hotelsArr,
+      all_hotels: hotels,
       all_restaurants: restaurants,
       all_activities: activities
     });
