@@ -6,7 +6,7 @@ $(document).ready( function() {
 
     var $newHotel = $('<div class="itinerary-item">' +
                     '<span class="title">' + selectHotel + '</span>' +
-                    '<button class="btn btn-xs btn-danger remove btn-circle">x</button></div>')
+                    '<button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
     if (!$currHotel.children().length) {
       $currHotel.append($newHotel);
     } else {
@@ -50,4 +50,12 @@ $(document).ready( function() {
 
   });
 
-})
+  // $('ul .remove').on('click', function() {
+  //   console.log(this);
+  // });
+
+  $('.list-group').on('click', '.itinerary-item button.remove', function() { 
+    $(this).parent().remove();
+  });
+
+});
