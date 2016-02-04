@@ -58,4 +58,20 @@ $(document).ready( function() {
     $(this).parent().remove();
   });
 
+  $('.add-day').on('click', function() {
+    //find value of last sibling
+    var lastDay = Number($(this).siblings().last().text()) + 1;
+    console.log(lastDay);
+
+    var newDay = '<button class="btn btn-circle day-btn">'+ lastDay +'</button>';
+
+    $(newDay).insertBefore($(this));
+
+    //create variable
+
+    //append button with new value
+
+
+  })
+
 });
