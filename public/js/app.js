@@ -1,4 +1,37 @@
 $(document).ready( function() {
+  // draw some locations on the map
+  function drawLocation(location, opts) {
+    if (typeof opts !== 'object') {
+      opts = {};
+    }
+    opts.position = new google.maps.LatLng(location[0], location[1]);
+    opts.map = map;
+    var marker = new google.maps.Marker(opts);
+  }
+
+  // var hotelLocation = [40.705137, -74.007624];
+  // var restaurantLocations = [
+  //       [40.705137, -74.013940],
+  //       [40.708475, -74.010846]
+  //     ];
+  // var activityLocations = [
+  //       [40.716291, -73.995315],
+  //       [40.707119, -74.003602]
+  //     ];
+
+  // drawLocation(hotelLocation, {
+  //   icon: '/images/lodging_0star.png'
+  // });
+  // restaurantLocations.forEach(function(loc) {
+  //   drawLocation(loc, {
+  //     icon: '/images/restaurant.png'
+  //   });
+  // });
+  // activityLocations.forEach(function(loc) {
+  //   drawLocation(loc, {
+  //     icon: '/images/star-3.png'
+  //   });
+  // });
 
   // location LIST, can be a hotel, restaurants or activities list
   // handles adding and removing items from DOM
@@ -11,7 +44,6 @@ $(document).ready( function() {
   LocationList.prototype.add = function () {
     var selectItem = $('.' + this.type +'-list select').val();
 
-
     if (this.type === 'hotel' && this.contents.length) {
       this.contents = [];
     }
@@ -21,6 +53,37 @@ $(document).ready( function() {
     if (this.contents.indexOf(newItem) === -1 ) {
       this.contents.push(newItem);
       this.show();
+
+      //add marker to map
+      var obj = {};
+
+      var opts;
+
+
+      if ( this.type === 'hotel' ) {
+        obj = hotels.filter(function(val) {
+          return val.name === selectItem;
+        });
+        opts = { icon: '/images/lodging_0star.png' }
+      } else if ( this.type === 'restaurants' ) {
+        obj = restaurants.filter(function(val) {
+          return val.name === selectItem;
+        });
+        opts = { icon: '/images/restaurant.png' }
+      } else if ( this.type === 'activities') {
+        // console.log(activities);
+        obj = activities.filter(function(val) {
+          return val.name === selectItem;
+        });
+        opts = { icon: '/images/star-3.png' }
+      }
+      console.log(obj);
+      drawLocation(obj[0].place[0].location, opts);
+    //   var marker = new google.maps.Marker({
+    //     position: new google.maps.LatLng(obj[0], obj[1]),
+    //     map: map,
+    //     title: selectItem
+    //   })
     }
   } 
 
@@ -141,6 +204,7 @@ $(document).ready( function() {
       currItinerary.days[0].show();
     } else {
       currItinerary.removeDay(day);
+      //
       var $prevDay = $('.day-btn:contains(' + String(day - 1) + ')');
       if (day !== 1) {
         currItinerary.switchToDay($prevDay);
