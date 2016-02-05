@@ -170,11 +170,11 @@ $(document).ready( function() {
     var listType = $item.parent().parent().parent().attr('class');
     listType = listType.slice(listType.indexOf('-') + 1);
     if (listType === 'hotel') {
-      hotel.delete($item);
+      currItinerary.days[getCurrentDay() - 1].hotel.delete($item);
     } else if (listType === 'restaurants') {
-      restaurants.delete($item);
+      currItinerary.days[getCurrentDay() - 1].restaurants.delete($item);
     } else if (listType === 'activities') {
-      activities.delete($item);
+      currItinerary.days[getCurrentDay() - 1].activities.delete($item);
     }
   });
 
