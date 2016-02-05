@@ -39,8 +39,7 @@ $(document).ready( function() {
   } 
 
   // DAY containing a list each for hotel, restaurants, activities
-  function Day(number) {
-    this.day = number;
+  function Day() {
     this.hotel = new LocationList('hotel');
     this.restaurants = new LocationList('restaurants');
     this.activities = new LocationList('activities');
@@ -55,17 +54,31 @@ $(document).ready( function() {
 
   // ITINERARY containing a list of days
   function Itinerary() {
-    this.days = [new Day(1)];
+    this.days = [new Day()];
   }
 
   // add a day to the itinerary
-  Itinerary.prototype.addDay = function(num) {
-    this.days.push(new Day(num));
+  Itinerary.prototype.addDay = function() {
+    this.days.push(new Day());
 
   }
 
   // remove a day from the itinerary
-  Itinerary.prototype.removeDay = function() {
+  Itinerary.prototype.removeDay = function(num) {
+    this.days.splice(num-1, 1);
+  }
+
+  Itinerary.prototype.switchToDay = function($newDay) {
+    var oldDay = $('.current-day');
+
+    oldDay.removeClass('current-day');
+      
+    $newDay.addClass('current-day');
+
+    var dayNum = Number($newDay.text());
+    
+    currItinerary.days[dayNum - 1].show();
+    $('#day-title span').text("Day "+ dayNum);
 
   }
 
@@ -74,8 +87,9 @@ $(document).ready( function() {
 
 
   function getCurrentDay() {
-    return $('.current-day').text();
+    return Number($('.current-day').text());
   }
+
   $('.hotel-list button').on('click', function() {
     currItinerary.days[getCurrentDay() - 1].hotel.add();
   });
@@ -114,17 +128,29 @@ $(document).ready( function() {
   });
 
   $('.day-buttons').on('click', '.day-btn', function() {
-    var oldDay = $('.current-day');
-
     if (!$(this).hasClass('add-day') ) {
-      oldDay.removeClass('current-day');
-      
-      var newDay = $(this);
-      newDay.addClass('current-day');
+      currItinerary.switchToDay( $(this) );
+    }
+  });
 
-      currItinerary.days[Number(newDay.text()) - 1].show();
+  $('#day-title').on('click', 'button', function() {
+    var day = getCurrentDay();
+    if (day === 1 && currItinerary.days.length === 1) {
+      console.log('there was 1 day left')
+      currItinerary.days = [new Day()];
+      currItinerary.days[0].show();
+    } else {
+      currItinerary.removeDay(day);
+      var $prevDay = $('.day-btn:contains(' + String(day - 1) + ')');
+      if (day !== 1) {
+        currItinerary.switchToDay($prevDay);
+      } else {
+        var $day = $('.day-btn:contains(1)');
+        currItinerary.switchToDay($day);
+      }
+      $('.add-day').siblings().last().remove();
     }
 
-  });
+  })
 
 });
